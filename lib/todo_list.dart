@@ -19,6 +19,18 @@ class _ToDoListState extends State<ToDoList> {
 
   TextEditingController controller = new TextEditingController();
 
+  Color getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return Colors.blue;
+    }
+    return Colors.red;
+  }
+
   _addTodo() {
     showDialog(
       context: context,
@@ -61,7 +73,7 @@ class _ToDoListState extends State<ToDoList> {
     // }
 
     return Container(
-      padding: EdgeInsets.only(left: 15, right: 10),
+      padding: EdgeInsets.only(left: 10, right: 10),
       height: 100,
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -84,10 +96,18 @@ class _ToDoListState extends State<ToDoList> {
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          Checkbox(
+            checkColor: Colors.white,
+            fillColor: MaterialStateProperty.resolveWith(getColor),
+            value: todos[index].isChanged,
+            onChanged: (bool? value) {
+              toggleTodo(todos[index], value as bool);
+            },
+          ),
           Text(
-            'Yapılacak',
+            todos[index].title,
             style: TextStyle(
               fontSize: 20,
               color: Colors.white70,
@@ -95,15 +115,14 @@ class _ToDoListState extends State<ToDoList> {
             ),
           ),
           Spacer(),
-          Checkbox(
-            value: todos[index].isChanged,
-            onChanged: (bool? value) {
-              toggleTodo(todos[index], value as bool);
-            },
-          ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                todos.removeAt(index);
+              });
+            },
             icon: Icon(Icons.delete),
+            color: Colors.white70,
           )
         ],
       ),
@@ -113,7 +132,41 @@ class _ToDoListState extends State<ToDoList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo List'),
+        toolbarHeight: 100,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.purpleAccent, Colors.purple],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+              Text(
+                'Todo List',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                '2 Haz.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                ),
+              ),
+            ],
+          ),
+        ),
+        //title: Text('Todo List'),
+        //centerTitle: true,
       ),
       body: ListView.builder(
         itemBuilder: _itembuild,
