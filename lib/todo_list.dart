@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './todo.dart';
+import './CustomAppBar.dart';
 
 class ToDoList extends StatefulWidget {
   @override
@@ -131,48 +132,19 @@ class _ToDoListState extends State<ToDoList> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.purpleAccent, Colors.purple],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-          ),
-          child: Column(
-            children: [
-              SizedBox(height: 50),
-              Text(
-                'Todo List',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                '2 Haz.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                ),
-              ),
-            ],
-          ),
+      drawer: Drawer(
+        child: ListView(
+          children: [ListTile()],
         ),
-        //title: Text('Todo List'),
-        //centerTitle: true,
       ),
+      appBar: CustomAppBar(),
       body: ListView.builder(
         itemBuilder: _itembuild,
         itemCount: todos.length,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.purpleAccent,
         onPressed: _addTodo,
         child: Icon(Icons.add),
       ),
