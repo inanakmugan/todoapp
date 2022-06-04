@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/todo.dart';
-import 'CustomAppBar.dart';
+import './CustomAppBar.dart';
+import '../providers/generalProvider.dart';
 
 class ToDoList extends StatefulWidget {
   @override
@@ -10,7 +12,7 @@ class ToDoList extends StatefulWidget {
 
 class _ToDoListState extends State<ToDoList> {
   @override
-  List<Todo> todos = [];
+  late List<Todo> todos;
 
   DateTime? newDate;
 
@@ -18,6 +20,13 @@ class _ToDoListState extends State<ToDoList> {
   void initState() {
     // TODO: implement initState
     newDate = DateTime.now();
+  }
+
+  @override
+  void didChangeDependencies() {
+    todos = Provider.of<GeneralProvider>(context).getTodo;
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   void toggleTodo(Todo todo, bool isChecked) {
@@ -53,9 +62,8 @@ class _ToDoListState extends State<ToDoList> {
           actions: <Widget>[
             TextButton(
                 onPressed: () {
-                  setState(() {
-                    todos.add(Todo(title: controller.text, isChanged: false));
-                  });
+                  Provider.of<GeneralProvider>(context, listen: false).addTodo(
+                      Todo(title: controller.value.text, isChanged: false));
                   controller.clear();
                   Navigator.of(context).pop();
                 },
@@ -117,9 +125,8 @@ class _ToDoListState extends State<ToDoList> {
           Spacer(),
           IconButton(
             onPressed: () {
-              setState(() {
-                todos.removeAt(index);
-              });
+              Provider.of<GeneralProvider>(context, listen: false)
+                  .removeTodo(index);
             },
             icon: Icon(Icons.delete),
             color: Colors.white70,

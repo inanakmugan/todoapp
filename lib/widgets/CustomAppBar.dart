@@ -5,8 +5,6 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   late DateTime newDate = DateTime.now();
   CustomAppBar({required this.newDate});
 
-  AppBar myappbar = AppBar();
-
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
   @override
@@ -22,12 +20,22 @@ class _CustomAppBarState extends State<CustomAppBar> {
     });
   }
 
+  late AppBar appbar;
+
   static late String formattedDate;
 
   @override
   void initState() {
     formattedDate = DateFormat.MMMd().format(widget.newDate);
-    widget.myappbar = AppBar(
+
+    ;
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    appbar = AppBar(
       toolbarHeight: 100,
       flexibleSpace: Container(
         decoration: BoxDecoration(
@@ -65,13 +73,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
       //title: Text('Todo List'),
       //centerTitle: true,
     );
-    ;
-    // TODO: implement initState
-    super.initState();
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.myappbar;
+    return appbar;
   }
 }
