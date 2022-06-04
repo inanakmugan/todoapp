@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './todo.dart';
-import './CustomAppBar.dart';
+import '../models/todo.dart';
+import 'CustomAppBar.dart';
 
 class ToDoList extends StatefulWidget {
   @override
@@ -11,6 +11,14 @@ class ToDoList extends StatefulWidget {
 class _ToDoListState extends State<ToDoList> {
   @override
   List<Todo> todos = [];
+
+  DateTime? newDate;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    newDate = DateTime.now();
+  }
 
   void toggleTodo(Todo todo, bool isChecked) {
     setState(() {
@@ -64,15 +72,6 @@ class _ToDoListState extends State<ToDoList> {
   }
 
   Widget _itembuild(BuildContext context, int index) {
-    //   return CheckboxListTile(
-    //     title: Text(todos[index].title),
-    //     value: todos[index].isChanged,
-    //     onChanged: (bool? value) {
-    //       toggleTodo(todos[index], value as bool);
-    //     },
-    //   );
-    // }
-
     return Container(
       padding: EdgeInsets.only(left: 10, right: 10),
       height: 100,
@@ -130,14 +129,45 @@ class _ToDoListState extends State<ToDoList> {
     );
   }
 
+  Future pickDate(BuildContext context) async {
+    final initialDate = DateTime.now();
+    newDate = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime(DateTime.now().year - 5),
+        lastDate: DateTime(DateTime.now().year + 5));
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
-          children: [ListTile()],
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.purpleAccent, Colors.purple],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight),
+              ),
+              child: Container(
+                height: 100,
+              ),
+            ),
+            ListTile(
+              title: Text(
+                'Date',
+                style: TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+              onTap: () => pickDate(context),
+            )
+          ],
         ),
       ),
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(newDate: newDate as DateTime),
       body: ListView.builder(
         itemBuilder: _itembuild,
         itemCount: todos.length,
