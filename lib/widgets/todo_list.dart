@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../models/todo.dart';
 import './CustomAppBar.dart';
 import '../providers/generalProvider.dart';
+import '../db/TodoDatabase.dart';
 
 class ToDoList extends StatefulWidget {
   @override
@@ -13,13 +15,17 @@ class ToDoList extends StatefulWidget {
 class _ToDoListState extends State<ToDoList> {
   @override
   late List<Todo> todos;
+  bool isLoading = false;
 
   DateTime? newDate;
 
+  Database? db;
+
   @override
   void initState() {
-    // TODO: implement initState
-    newDate = DateTime.now();
+    refreshTodos;
+
+    super.initState();
   }
 
   @override
@@ -29,9 +35,20 @@ class _ToDoListState extends State<ToDoList> {
     super.didChangeDependencies();
   }
 
+  Future refreshTodos() async {
+    setState(() {
+      isLoading = true;
+    });
+    todos = await TodoDatabase.instance.readallTodos();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   void toggleTodo(Todo todo, bool isChecked) {
     setState(() {
       todo.isChanged = isChecked;
+      TodoDatabase.instance.update(todo);
     });
   }
 
@@ -63,7 +80,13 @@ class _ToDoListState extends State<ToDoList> {
             TextButton(
                 onPressed: () {
                   Provider.of<GeneralProvider>(context, listen: false).addTodo(
-                      Todo(title: controller.value.text, isChanged: false));
+                    Todo(
+                      title: controller.value.text,
+                      isChanged: false,
+                      date: DateTime.now(),
+                    ),
+                  );
+
                   controller.clear();
                   Navigator.of(context).pop();
                 },
@@ -126,7 +149,7 @@ class _ToDoListState extends State<ToDoList> {
           IconButton(
             onPressed: () {
               Provider.of<GeneralProvider>(context, listen: false)
-                  .removeTodo(index);
+                  .removeTodo(index, todos[index]);
             },
             icon: Icon(Icons.delete),
             color: Colors.white70,
