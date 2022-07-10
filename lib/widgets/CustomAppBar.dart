@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  late DateTime newDate = DateTime.now();
-  CustomAppBar({required this.newDate});
-
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
   @override
@@ -14,22 +11,13 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  void ChangeDate() {
-    setState(() {
-      formattedDate = DateFormat.MMMd().format(widget.newDate);
-    });
-  }
-
   late AppBar appbar;
 
   static late String formattedDate;
 
   @override
   void initState() {
-    formattedDate = DateFormat.MMMd().format(widget.newDate);
-
-    ;
-    // TODO: implement initState
+    formattedDate = DateFormat.MMMd().format(DateTime.now());
     super.initState();
   }
 
@@ -73,7 +61,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
       //title: Text('Todo List'),
       //centerTitle: true,
     );
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 

@@ -11,11 +11,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => GeneralProvider(),
-      child: MaterialApp(
-        home: ToDoList(),
-      ),
+    return MaterialApp(
+      home: ToDoList(),
     );
   }
 }
